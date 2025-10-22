@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Query Optimization Results</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 2em; line-height: 1.6; }
+        h1 { color: #111; }
+        .result-container { display: flex; gap: 2em; margin-top: 2em; flex-wrap: wrap; }
+        .result-box { flex: 1; min-width: 450px; border: 1px solid #ccc; padding: 1.5em; border-radius: 8px; background-color: #f9f9f9; }
+        h2 { margin-top: 0; color: #333; border-bottom: 1px solid #ddd; padding-bottom: 0.5em;}
+        h3 { font-size: 1.1em; color: #444; margin-top: 1.5em; margin-bottom: 0.5em;}
+        .label { font-weight: bold; color: #555; }
+        .time { font-size: 1.5em; font-weight: bold; }
+        .unoptimized .time { color: #d9534f; }
+        .optimized .time { color: #5cb85c; }
+        pre { background-color: #f0f0f0; padding: 1em; border: 1px solid #ddd; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; font-size: 0.95em; }
+        .explanation { font-size: 0.95em; }
+        .back-link { margin-top: 2em; display: inline-block; text-decoration: none; color: #0056b3;}
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1 th:text="${optimizationType}">Optimization Type</h1>
+
+    <div class="result-container">
+        <div class="result-box unoptimized">
+            <h2>Unoptimized</h2>
+            <p><span class="label">Execution Time:</span> <span class="time" th:text="${unoptimizedTime} + ' ms'">0 ms</span></p>
+            
+            <h3>Query</h3>
+            <pre><code th:text="${unoptimizedQuery}">SELECT * FROM ...</code></pre>
+
+            <h3>Explanation</h3>
+            <p class="explanation" th:utext="${unoptimizedExplanation}">Explanation for the unoptimized query.</p>
+        </div>
+
+        <div class="result-box optimized">
+            <h2>Optimized</h2>
+            <p><span class="label">Execution Time:</span> <span class="time" th:text="${optimizedTime} + ' ms'">0 ms</span></p>
+
+            <h3>Query</h3>
+            <pre><code th:text="${optimizedQuery}">SELECT * FROM ...</code></pre>
+
+            <h3>Explanation</h3>
+            <p class="explanation" th:utext="${optimizedExplanation}">Explanation for the optimized query.</p>
+        </div>
+    </div>
+
+    <a th:href="@{\/}" class="back-link">&larr; Back to Home</a>
+</body>
+</html>
