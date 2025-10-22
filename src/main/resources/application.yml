@@ -5,22 +5,14 @@ spring:
     username: queryuser
     password: querypassword
     driverClassName: com.mysql.cj.jdbc.Driver
-  # schema.sql을 사용하므로 JPA의 DDL 자동 생성 및 지연 초기화는 더 이상 필요하지 않습니다.
   jpa:
     database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: none # 스키마 관리는 schema.sql에 위임
     show-sql: true
+    # properties 하위의 배치 관련 설정은 HibernateConfig.java에서 직접 하므로 제거합니다.
     properties:
-      hibernate:
-        format_sql: true
-        # JDBC Batching 설정
-        jdbc:
-          batch_size: 50
-          order_inserts: true
-          order_updates: true
-          batch_versioned_data: true
-  # spring.jpa.defer-datasource-initialization: true # 더 이상 필요 없음
+      hibernate.format_sql: true
   sql:
     init:
       mode: always # 항상 schema.sql을 실행

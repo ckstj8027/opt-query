@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 public class InsertService {
 
     private final ProductRepository productRepository;
-    private static final int INSERT_COUNT = 50000; // 데이터 양을 50,000개로 늘림
+    private static final int INSERT_COUNT = 50000; // 5만 건으로 테스트
 
     public InsertService(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -24,13 +24,11 @@ public class InsertService {
     public long runUnoptimizedQuery() {
         productRepository.deleteAllInBatch(); // Clear table for accurate measurement
 
-        List<Product> products = IntStream.range(0, INSERT_COUNT)
-                .mapToObj(i -> new Product("Product " + i, ThreadLocalRandom.current().nextDouble(10, 100)))
-                .collect(Collectors.toList());
-
         long startTime = System.nanoTime();
-        for (Product product : products) {
-            productRepository.save(product); // Single save in a loop
+        // 루프 내에서 객체 생성과 save를 반복하여 건건이 처리하는 시나리오를 정확히 시뮬레이션
+        for (int i = 0; i < INSERT_COUNT; i++) {
+            Product product = new Product("Product " + i, ThreadLocalRandom.current().nextDouble(10, 100));
+            productRepository.save(product);
         }
         long endTime = System.nanoTime();
         return (endTime - startTime) / 1_000_000; // ms
@@ -40,6 +38,7 @@ public class InsertService {
     public long runOptimizedQuery() {
         productRepository.deleteAllInBatch(); // Clear table for accurate measurement
 
+        // 데이터를 리스트에 모두 모았다가 한 번에 저장하는 시나리오
         List<Product> products = IntStream.range(0, INSERT_COUNT)
                 .mapToObj(i -> new Product("Product " + i, ThreadLocalRandom.current().nextDouble(10, 100)))
                 .collect(Collectors.toList());
